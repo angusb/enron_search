@@ -38,17 +38,21 @@ int main() {
 	vector<string> files;
 	recursive_read_directories("./skilling-j", files);
 
-	TrieNode root(' '); // TODO: cpp errors out on '' -> empty character constant
+	TrieNode root(' '); // TODO: cpp errors out on '' -> empty character constant. TODO
 	for (int i=0; i<files.size(); ++i) {
 		ifstream infile(files[i].c_str());
 		while (infile.good()) {
 			string word;
 			infile >> word;
 			root.extend(word, files[i]);
-			cout << word << endl;
 		}
 
 		infile.close();
+	}
+
+	vector<string> results = root.contains("Subject:");
+	for (int i=0; i<results.size(); ++i) {
+		cout << results[i] << endl;
 	}
 
 	return 0;

@@ -25,9 +25,7 @@ class TrieNode {
 
 	private:
 		char letter;
-
-		map<char, int> start_offsets;
-		map<char, int> end_offsets;
+		map<char, TrieNode*> children;
 		vector<string> emails; // an 'email' corresponds to the unique path to the email file
 };
 

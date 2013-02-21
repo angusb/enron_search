@@ -1,8 +1,10 @@
 #include "TrieNode.h"
 
+#include <iostream> // TODO REMOVE
+
 // Considered having a TrieManager object that each TrieNode uses to write itself.
 // Discovered one rather glaring issue, however, with writing to one file. As I construct
-// TrieNodes, the change size as they are modified. This poses an issue of writing 
+// TrieNodes, the change size as they are modified.  
 
 TrieNode::TrieNode(const char letter_) :
 	letter(letter_) {}
@@ -13,23 +15,22 @@ void TrieNode::extend(string word, string email) {
 	}
 
 	char l = word[0];
-	TrieNode child(' ');
-	if (start_offsets.find(l) != start_offsets.end()) {
-		assert(end_offsets.find(l) != end_offsets.end()); // Ensure consistency
-
-		// read child node from disk; child = 
+	TrieNode* child;
+	if (children.find(l) != children.end()) {
+		child = children[l];
+		child->add_email(email);
+		// Alternatively, read child node from disk either using offsets (old strategy) or TrieManager
 	} else {
-		child = TrieNode(l);
-		child.add_email(email);
+		child = new TrieNode(l);
+		child->add_email(email);
+		children[l] = child;
+		// Alternatively,
 		// offsets = TrieManager.write_TrieNode(this);
 		// start_offset[l] = offsets.first;
 		// start_offset[l] = offsets.second;
-
-
-		// persist to disk
 	}
 
-	child.extend(word.substr(1), email); 
+	child->extend(word.substr(1), email); 
 }
 
 vector<string> TrieNode::contains(string word) {
@@ -38,9 +39,9 @@ vector<string> TrieNode::contains(string word) {
 	}
 
 	char l = word[0];
-	if (start_offsets.find(l) != start_offsets.end()) {
-		assert(end_offsets.find(l) != end_offsets.end()); // Ensure consistency TODO redundant
-		// TrieNode = TrieManager.read
+
+	if (children.find(l) != children.end()) {
+		return children[l]->contains(word.substr(1));
 	} else { // No matches
 		return emails;
 	}

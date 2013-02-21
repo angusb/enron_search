@@ -9,12 +9,7 @@
 
 using namespace std;
 
-// 1. Read files
-// 
-// Add 50-60 MB handling afterwards
-// TODO: remove assumption of directoroy structure
-
-void recursive_read_directories(string dir_name, vector<string>& sub_dirs) {
+void recursively_read_directories(string dir_name, vector<string>& sub_dirs) {
 	DIR* dir;
 	struct dirent *dirp;
 	dir = opendir(dir_name.c_str()); // TODO: close files
@@ -24,7 +19,7 @@ void recursive_read_directories(string dir_name, vector<string>& sub_dirs) {
 		if (((dn != ".." && dn != "." && dn != ".DS_Store")) && (dirp->d_type == DT_DIR)) {
 			string new_dir = dir_name + "/" + dn;
 			vector<string> next_dir;			
-			recursive_read_directories(new_dir, next_dir);
+			recursively_read_directories(new_dir, next_dir);
 			for (int i=0; i<next_dir.size(); ++i) {
 				sub_dirs.push_back(next_dir[i]);
 			}
@@ -34,9 +29,20 @@ void recursive_read_directories(string dir_name, vector<string>& sub_dirs) {
 	}
 }
 
+void search(string query, TrieNode& root) {
+	vector<string> results = root.contains(query);
+	for (int i=0; i<results.size(); ++i) {
+		cout << results[i] << endl;
+	}	
+}
+
+void deallocate_memory(TrieNode& root) {
+	// Not of pressing importance but something that should be done
+}
+
 int main() {
 	vector<string> files;
-	recursive_read_directories("./skilling-j", files);
+	recursively_read_directories("./skilling-j", files);
 
 	TrieNode root(' '); // TODO: cpp errors out on '' -> empty character constant. TODO
 	for (int i=0; i<files.size(); ++i) {
@@ -50,10 +56,7 @@ int main() {
 		infile.close();
 	}
 
-	vector<string> results = root.contains("Subject:");
-	for (int i=0; i<results.size(); ++i) {
-		cout << results[i] << endl;
-	}
+	search("Subject:", root);
 
 	return 0;
 }

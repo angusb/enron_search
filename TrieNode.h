@@ -27,6 +27,10 @@ class TrieNode {
 		char letter;
 		map<char, TrieNode*> children;
 		vector<string> emails; // an 'email' corresponds to the unique path to the email file
+
+		// These should be set by the TrieManager and used in contains
+		map<char, int> start_offset;
+		map<char, int> end_offset;		
 };
 
 #endif

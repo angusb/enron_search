@@ -34,6 +34,7 @@ void TrieNode::extend(string word, string email) {
 }
 
 vector<string> TrieNode::contains(string word) {
+	// Note: this should use the start_offset and end_offsets and the TrieManager. Not quite there yet.
 	if (word == "") {
 		return emails;
 	}
